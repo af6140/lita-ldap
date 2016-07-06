@@ -3,8 +3,8 @@ Gem::Specification.new do |spec|
   spec.version       = "0.1.0"
   spec.authors       = ["Wang, Dawei"]
   spec.email         = ["daweiwang.gatekeeper@gmail.com"]
-  spec.description   = "LDAP operations"
-  spec.summary       = "LDAP operations"
+  spec.description   = "Lita LDAP operations like search user and group."
+  spec.summary       = "LDAP operations for Lita Chatbot"
   spec.homepage      = "https://github.com/af6140/lita-ldap"
   spec.license       = "Apache-2.0"
   spec.metadata      = { "lita_plugin_type" => "handler" }
@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_runtime_dependency "rack", "~> 1.6"
+  spec.add_runtime_dependency "rack", "~> 1.6" #set to 1.6 so that we can run under ruby 2.1
   spec.add_runtime_dependency "lita", ">= 4.7"
   spec.add_runtime_dependency 'net-ldap', ">= 0.14"
 
