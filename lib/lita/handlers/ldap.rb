@@ -57,14 +57,14 @@ module Lita
 
       def cmd_search_user(response)
         search_string = response.matches[0][0]
-        puts "searching user with #{search_string}"
+        #logger.info "searching user with #{search_string}"
         results = search_user(search_string)
         response.reply results
       end
 
       def cmd_search_group(response)
         search_string = response.matches[0][0]
-        puts "searching user with #{search_string}"
+        #logger.debug "searching group with #{search_string}"
         results = search_group(search_string)
         response.reply results
       end
