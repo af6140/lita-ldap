@@ -29,3 +29,5 @@ end
 
 * lita search user nexus
 * lita search group nx-admin
+* lita search with filter 'cn=gerrit'
+* lita show dn 'cn=gerrit,ou=people,dc=ldap,dc=example,dc=com'

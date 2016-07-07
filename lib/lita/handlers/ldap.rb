@@ -55,6 +55,36 @@ module Lita
        }
       )
 
+      #https://dzone.com/articles/matching-quoted-strings-ruby
+      #matching quoted string
+      route(
+        /^ldap\s+check\s+filter\s+(["'])([^\1]+)(\1)$/,
+        :cmd_check_filter,
+        command: true,
+        help: {
+          t('help.cmd_check_filter_key') => t('help.cmd_check_filter_value')
+        }
+      )
+
+      route(
+        /^ldap\s+search\s+with\s+filter\s+(["'])([^\1]+)(\1)$/,
+        :cmd_search_with_filter,
+        command: true,
+        help: {
+          t('help.cmd_search_with_filter_key') => t('help.cmd_search_with_filter_value')
+        }
+      )
+
+      route(
+        /^ldap\s+show\s+dn\s+(["'])([^\1]+)(\1)$/,
+        :cmd_search_with_dn,
+        command: true,
+        help: {
+          t('help.cmd_search_with_dn_key') => t('help.cmd_search_with_dn_value')
+        }
+      )
+
+
       def cmd_search_user(response)
         search_string = response.matches[0][0]
         #logger.info "searching user with #{search_string}"
@@ -67,6 +97,46 @@ module Lita
         #logger.debug "searching group with #{search_string}"
         results = search_group(search_string)
         response.reply results
+      end
+
+      def cmd_check_filter(response)
+        filter_string = response.matches[0][1]
+        #puts "filter_string: #{filter_string}"
+        if ! filter_string.nil? && filter_string.strip.length>0
+          is_valid = valid_filter?(filter_string)
+          if is_valid
+            response.reply "Filter is valid"
+          else
+            response.reply "Filter in not valid"
+          end
+        else
+          response.reply "Filter string is empty"
+        end
+      end
+
+      def cmd_search_with_filter(response)
+        filter_string = response.matches[0][1]
+        if ! filter_string.nil? && filter_string.strip.length>0
+          is_valid = valid_filter?(filter_string)
+          if is_valid
+            results = search_with_filter(filter_string)
+            response.reply results
+          else
+            response.reply "Filter in not valid"
+          end
+        else
+          response.reply "Filter string is empty"
+        end
+      end
+
+      def cmd_search_with_dn(response)
+        dn = response.matches[0][1]
+        if ! dn.nil? && dn.strip.length>0
+          results = get_entry_by_dn(dn)
+          response.reply results
+        else
+          response.reply "Invalid dn"
+        end
       end
 
       Lita.register_handler(self)

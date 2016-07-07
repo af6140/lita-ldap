@@ -55,6 +55,8 @@ describe Lita::Handlers::Ldap, lita_handler: true do
   it do
     is_expected.to route_command('ldap search user nexus').to(:cmd_search_user)
     is_expected.to route_command('ldap search group nx-admin').to(:cmd_search_group)
+    is_expected.to route_command('ldap check filter "cn=admin"').to(:cmd_check_filter)
+    is_expected.to route_command('ldap search with filter "cn=nexus"').to(:cmd_search_with_filter)
   end
 
   describe '#search user' do
@@ -67,6 +69,28 @@ describe Lita::Handlers::Ldap, lita_handler: true do
   describe '#search group' do
     it 'search group' do
       send_command("ldap search group nx-admin")
+      puts replies
+    end
+  end
+
+  describe '#check filter' do
+    it 'validate filter syntax' do
+      send_command("ldap check filter '(|(objectclass=user)(objectclass=person)(objectclass=inetOrgPerson)(objectclass=organizationalPerson))'")
+      puts replies
+    end
+  end
+
+  describe '#search with filter' do
+    it 'search with filter' do
+      send_command("ldap search with filter 'cn=gerrit'")
+      puts replies
+    end
+  end
+
+  describe '#show dn' do
+    it 'show entry with specified dn' do
+      send_command("ldap show dn 'dn: cn=nx-admin,ou=groups,dc=ldap,dc=example,dc=com'")
+      puts "ldap show dn"
       puts replies
     end
   end

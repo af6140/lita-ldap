@@ -17,5 +17,51 @@ module LitaLDAPHelper
         raise "Cannot connect to ldap server"
       end
     end
-  end
-end
+
+    def valid_filter?(filter_str)
+      begin
+        filter=Net::LDAP::Filter.construct(filter_str)
+        true
+      rescue Exception => e
+        false
+      end
+    end
+
+    def search_with_filter(filter_str)
+      tree_base = "#{config.base_dn}"
+      puts "search base_dn : #{tree_base}"
+      filter=Net::LDAP::Filter.construct(filter_str)
+      return_attributes = config.default_attributes || '*'
+      return_attributes = return_attributes.split(',')
+      entries = client.search(:base => tree_base, :filter => filter, :attributes =>return_attributes , :return_result => true)
+      results = []
+      unless entries.nil?
+        entries.each do |entry|
+          results << entry.to_ldif
+          results << '*********'
+        end
+      end
+      #puts results
+      results
+    end
+
+    def get_entry_by_dn(dn)
+      dn_spec = dn.split(':',2)
+      dn_str = dn_spec[0]
+      if dn_spec.length>1
+        dn_str = dn_spec[1]
+      end
+      dn_str = dn_str.strip
+      entries = client.search(:base => dn_str, :filter => nil, :attributes =>['*'] , :return_result => true)
+      results = []
+      unless entries.nil?
+        entries.each do |entry|
+          results << entry.to_ldif
+          results << '*********'
+        end
+      end
+      #puts results
+      results
+    end
+  end#module misc
+end#module LitaLDAPHelper
