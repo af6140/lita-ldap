@@ -27,7 +27,7 @@ end
 
 ## Usage
 
-* lita search user nexus
-* lita search group nx-admin
-* lita search with filter 'cn=gerrit'
-* lita show dn 'cn=gerrit,ou=people,dc=ldap,dc=example,dc=com'
+* ldap search user nexus
+* ldap search group nx-admin
+* ldap search with filter 'cn=gerrit'
+* ldap show dn 'cn=gerrit,ou=people,dc=ldap,dc=example,dc=com'
