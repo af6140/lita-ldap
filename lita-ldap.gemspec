@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name          = "lita-ldap"
-  spec.version       = "0.1.1"
+  spec.version       = "0.1.2"
   spec.authors       = ["Wang, Dawei"]
   spec.email         = ["daweiwang.gatekeeper@gmail.com"]
   spec.description   = "Lita LDAP operations like search user and group."

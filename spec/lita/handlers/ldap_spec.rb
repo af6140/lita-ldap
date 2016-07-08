@@ -57,6 +57,10 @@ describe Lita::Handlers::Ldap, lita_handler: true do
     is_expected.to route_command('ldap search group nx-admin').to(:cmd_search_group)
     is_expected.to route_command('ldap check filter "cn=admin"').to(:cmd_check_filter)
     is_expected.to route_command('ldap search with filter "cn=nexus"').to(:cmd_search_with_filter)
+    is_expected.to route_command("ldap show dn 'dn: cn=nx-admin,ou=groups,dc=ldap,dc=example,dc=com'").to(:cmd_search_with_dn)
+    is_expected.to route_command("ldap delete dn 'dn: cn=nx-admin,ou=groups,dc=ldap,dc=example,dc=com'").to(:cmd_delete_with_dn)
+    is_expected.to route_command("ldap delete tree dn 'dn: ou=groups,dc=ldap,dc=example,dc=com'").to(:cmd_delete_tree_with_dn)
+    is_expected.to route_command('ldap root dse').to(:cmd_show_root_dse)
   end
 
   describe '#search user' do
@@ -91,6 +95,27 @@ describe Lita::Handlers::Ldap, lita_handler: true do
     it 'show entry with specified dn' do
       send_command("ldap show dn 'dn: cn=nx-admin,ou=groups,dc=ldap,dc=example,dc=com'")
       puts "ldap show dn"
+      puts replies
+    end
+  end
+
+  describe '#delete dn' do
+    it 'delete entry with specified dn' do
+      send_command("ldap delete dn 'dn: cn=nx-admin,ou=groups,dc=ldap,dc=example,dc=com'")
+      puts replies
+    end
+  end
+
+  describe '#delete tree' do
+    it 'delete tree with specified dn' do
+      send_command("ldap delete dn 'dn: ou=groups,dc=ldap,dc=example,dc=com'")
+      puts replies
+    end
+  end
+
+  describe '#show root dse' do
+    it 'show directory root dse' do
+      send_command("ldap root dse")
       puts replies
     end
   end

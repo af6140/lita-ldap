@@ -84,6 +84,33 @@ module Lita
         }
       )
 
+      route(
+        /^ldap\s+delete\s+dn\s+(["'])([^\1]+)(\1)$/,
+        :cmd_delete_with_dn,
+        command: true,
+        help: {
+          t('help.cmd_delete_with_dn_key') => t('help.cmd_delete_with_dn_value')
+        }
+      )
+
+      route(
+        /^ldap\s+delete\s+tree\s+dn\s+(["'])([^\1]+)(\1)$/,
+        :cmd_delete_tree_with_dn,
+        command: true,
+        help: {
+          t('help.cmd_delete_tree_with_dn_key') => t('help.cmd_delete_tree_with_dn_value')
+        }
+      )
+
+      route(
+        /^ldap\s+root\s+dse\s*$/,
+        :cmd_show_root_dse,
+        command: true,
+        help: {
+          t('help.cmd_show_root_dse_key') => t('help.cmd_show_root_dse_value')
+        }
+      )
+
 
       def cmd_search_user(response)
         search_string = response.matches[0][0]
@@ -105,12 +132,12 @@ module Lita
         if ! filter_string.nil? && filter_string.strip.length>0
           is_valid = valid_filter?(filter_string)
           if is_valid
-            response.reply "Filter is valid"
+            response.reply "Filter is valid."
           else
-            response.reply "Filter in not valid"
+            response.reply "Filter in not valid."
           end
         else
-          response.reply "Filter string is empty"
+          response.reply "Filter string is empty."
         end
       end
 
@@ -122,10 +149,10 @@ module Lita
             results = search_with_filter(filter_string)
             response.reply results
           else
-            response.reply "Filter in not valid"
+            response.reply "Filter in not valid."
           end
         else
-          response.reply "Filter string is empty"
+          response.reply "Filter string is empty."
         end
       end
 
@@ -135,8 +162,49 @@ module Lita
           results = get_entry_by_dn(dn)
           response.reply results
         else
-          response.reply "Invalid dn"
+          response.reply "Invalid dn provided."
         end
+      end
+
+      def cmd_delete_with_dn(response)
+        dn = response.matches[0][1]
+        if ! dn.nil? && dn.strip.length>0
+          begin
+            success = delete_entry_by_dn(dn)
+            if success
+              response.reply "Entry deleted."
+            else
+              response.reply "Failed to delete entry, server may not support LDAP control 1.2.840.113556.1.4.805."
+            end
+          rescue Exception => e
+            response.reply e.message
+          end
+        else
+          response.reply "Invalid dn provided."
+        end
+      end
+
+      def cmd_delete_tree_with_dn(response)
+        dn = response.matches[0][1]
+        if ! dn.nil? && dn.strip.length>0
+          begin
+            success = delete_tree_by_dn(dn)
+            if success
+              response.reply "Entry deleted."
+            else
+              response.reply "Failed to delete entry."
+            end
+          rescue Exception => e
+            response.reply e.message
+          end
+        else
+          response.reply "Invalid dn provided."
+        end
+      end
+
+      def cmd_show_root_dse(response)
+        results = search_root_dse
+        response.reply results
       end
 
       Lita.register_handler(self)

@@ -31,3 +31,6 @@ end
 * ldap search group nx-admin
 * ldap search with filter 'cn=gerrit'
 * ldap show dn 'cn=gerrit,ou=people,dc=ldap,dc=example,dc=com'
+* ldap delete dn 'cn=gerrit,ou=people,dc=ldap,dc=example,dc=com'
+* ldap delete tree dn 'ou=people,dc=ldap,dc=example,dc=com' #if supported
+* ldap root dse

@@ -63,5 +63,37 @@ module LitaLDAPHelper
       #puts results
       results
     end
+
+    def delete_entry_by_dn(dn)
+      dn_spec = dn.split(':',2)
+      dn_str = dn_spec[0]
+      if dn_spec.length>1
+        dn_str = dn_spec[1]
+      end
+      dn_str = dn_str.strip
+      client.delete :dn => dn_str
+    end
+
+    def delete_tree_by_dn(dn)
+      dn_spec = dn.split(':',2)
+      dn_str = dn_spec[0]
+      if dn_spec.length>1
+        dn_str = dn_spec[1]
+      end
+      dn_str = dn_str.strip
+      client.delete :dn => dn_str
+    end
+
+    def search_root_dse
+      begin
+        info = client.search_root_dse
+        if info
+          info.to_ldif
+        end
+      rescue Exception => e
+        e.message
+      end
+    end
+
   end#module misc
 end#module LitaLDAPHelper
